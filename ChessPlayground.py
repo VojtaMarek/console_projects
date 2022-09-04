@@ -1,38 +1,43 @@
 SymbolOne="# "
 SymbolTwo=". "
+pole=""
 
 
-
-def PrintLine(m, a, b): #prints a line, m(lenght, a(1stSimbol), b(2ndSimbol)
-    j=3
-    while j>0:
-        m1=m
+def PrintLine(m, n, a, b): #prints a line, m(lenght, a(1stSymbol), b(2ndSymbol)
+    radek=""
+    global pole
+    j = 0
+    while j<4:
+        m1 = m
         while m1>0:
-            i=m1*3
+            i = m1*3
+            x = ""
             if (i%6)>0:
-                print(3*a, end="")
+                x=(3*a)
             else:
-                print(3*b, end="")
+                x=(3*b)
+            radek[j]=x
             m1 -= 1
+        pole[n]=[radek]
         print("")
-        j -= 1
+        j += 1
 
 
-def CreatePlayGround(m,n):
-    while (n-n%2)>0:
-        PrintLine(m, SymbolOne,SymbolTwo)
-        PrintLine(m, SymbolTwo,SymbolOne)
+def CreatePlayGround(m, n):
+    while (n%2)>0:
+        PrintLine(m, n, SymbolOne,SymbolTwo)
+        PrintLine(m, n, SymbolTwo,SymbolOne)
         n=n-2
     if (n%2)==1:
         PrintLine(m, SymbolOne,SymbolTwo)
 
 print("Lines:")
-n = input()
+n = str(input())
 print("Columns:")
-m = input()
+m = str(input())
 
 try:
-    CreatePlayGround(int(m),int(n))
+    CreatePlayGround(m, n)
 except ValueError:
     print("Wrong entry, so lets play chess!")
-    CreatePlayGround(8,8)
+    CreatePlayGround(8, 8)
