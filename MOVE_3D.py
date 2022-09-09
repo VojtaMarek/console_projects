@@ -1,9 +1,6 @@
-#komentář změna
-#clear console function
+#clear console function, use "clearConsole()"
 import os
 clearConsole = lambda: os.system('cls' if os.name in ('nt', 'dos') else 'clear')
-#clearConsole()
-
 
 #global variables
 List = []
@@ -13,23 +10,24 @@ X = 1
 Y = 1
 Z = 0
 
-#dimension of the cube
-L = 3
+#dimensions of the cube
+L = 8
 
+""""adds one line to a list, and changes to start value (True, False)"""
 def line_to_list(start, length):
     position = 0
     new_line = [] #line to be finally added to the global List
-    #if start is True, make X and add a position
      #finish the line according to the length
     while position < length:
         if start:
             new_line.append("X")
         else:
             new_line.append("O")
-        position += 1
+        position += 1           #if start is True, make X and add one position
         start = not start
     List.append(new_line)
 
+"""prints the layer of space according the Z position/coordinate"""
 def print_list():
     z_list = List[Z].copy() 
     for line in z_list:
@@ -37,14 +35,8 @@ def print_list():
             print(item + "  ", end="")
         print("")
 
-def create__XX(dimension):
-    start = True
-    for position in range(dimension):
-        for z_position in range(dimension):
-            line_to_list(start, dimension, z_position)
-            start = not start
-        start = not start
 
+"""creates the space"""
 def create(dimension):
     start = True
     temp_list = []
@@ -60,18 +52,19 @@ def create(dimension):
     List = temp_list.copy()
     temp_list.clear()
 
-
+"""creates the visual move according the new coordinates"""
 def change_list(x, y, z): #to be upgraded according the last 2D version
     res_x = int(x % L)
     res_y = int(y % L)
     res_z = int(z % L)
 
-    print("test:", type(res_z))
+    #print("test:", type(res_z)) #un-comment to test the variable type of res_z variable
 
     List[res_z][res_y].pop(res_x)
     List[res_z][res_y].insert((res_x), str(z))
 
-def change_Z_position(): #to be repaired
+"""The problamatic change Z position to get to different dimension"""
+def change_Z_position(): #to be repaired!!!!
     global Z
     if ((Y%L+X%L)%L) > 0: #increase Z positon
         Z += 1
@@ -81,16 +74,17 @@ def change_Z_position(): #to be repaired
     #rest_Y = Y % L
     #Z = int((X-rest_X)/L) + int((X-rest_X)/L)
 
-
-create(L) #dimension of the squered field
-
+"""initialization below"""
+create(L) #create the field
 change_list(X, Y, Z)
-#print(List)
+#print(List)  #un-comment to see the list stucture
 
 clearConsole()
 print_list()
 
-while(1):
+
+"""The main loop"""
+while True:
     #direction = ""
     direction = input("Direction (wsad) ? ")
     if direction == "w":
