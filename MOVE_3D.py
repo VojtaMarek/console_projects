@@ -1,6 +1,6 @@
-#clear console function, use "clearConsole()"
 import os
-clearConsole = lambda: os.system('cls' if os.name in ('nt', 'dos') else 'clear')
+#clear console function, use "clear()"
+clear = lambda: os.system('cls' if os.name in ('nt', 'dos') else 'clear')
 
 #global variables
 List = []
@@ -11,7 +11,7 @@ Y = 1
 Z = 0
 
 #dimensions of the cube
-L = 8
+L = 1
 
 """"adds one line to a list, and changes to start value (True, False)"""
 def line_to_list(start, length):
@@ -75,29 +75,34 @@ def change_Z_position(): #to be repaired!!!!
     #Z = int((X-rest_X)/L) + int((X-rest_X)/L)
 
 """initialization below"""
+#get the size of cube:
+clear()
+print('Enter a cube side:')
+L = int(input('> '))
+clear()
+
+#put cursor to the middle on dimesion 0
+X = Y = (L // 2) - 1
+
 create(L) #create the field
 change_list(X, Y, Z)
-#print(List)  #un-comment to see the list stucture
+print(List)  #un-comment to see the list stucture
 
-clearConsole()
+clear()
 print_list()
 
 
 """The main loop"""
 while True:
     #direction = ""
-    direction = input("Direction (wsad) ? ")
-    if direction == "w":
-        Y -= 1
-    elif direction == "s":
-        Y += 1
-    elif direction == "a":
-        X -= 1
-    elif direction == "d":
-        X += 1
-    else:
-        continue
-    clearConsole()
+    print("\nChoose direction (wsad):")
+    direction = input('> ')
+    if direction == "w": Y -= 1
+    elif direction == "s": Y += 1
+    elif direction == "a": X -= 1
+    elif direction == "d": X += 1
+    else: continue
+    clear()
     #create(9)
     change_Z_position()
     change_list(X, Y, Z)
