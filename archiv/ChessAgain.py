@@ -43,7 +43,7 @@ def change_list(x, y):
 create(L) #dimension of the squered field
 
 change_list(X, Y)
-print(List)
+#print(List)
 
 #clearConsole()
 print_list()
@@ -61,7 +61,7 @@ while(1):
         X += 1
     else:
         continue
-    #clearConsole()
+    clearConsole()
     #create(9)
     change_list(X, Y)
     #print("_____________________")
