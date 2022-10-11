@@ -1,5 +1,0 @@
-:: This file.txt was created by T602-Lite on 08/10/2022 20:01:18.
-ahoj
-jak
-se
-daří?
