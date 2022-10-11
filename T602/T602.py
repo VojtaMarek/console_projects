@@ -68,7 +68,7 @@ def load_file(file_name, file_content):
         with open(file_name, 'r', encoding='utf-8') as f:
             file_content = f.readlines()
             f.close()
-    return file_content
+    return file_content, file_name
 
 def editor():
     """load file, create backup, loop while editing file, use commands to save, exit or backspace"""
@@ -77,7 +77,7 @@ def editor():
     file_content_backup = [] #copy of file_content for restoration
     input_line = "" #LINE text variable
 
-    file_content = load_file(file_name, file_content)
+    file_content, file_name = load_file(file_name, file_content)
     file_content_backup = file_content.copy()
     print_heading(len(file_content), file_name)
     
