@@ -1,1 +1,5 @@
-:: This File was created by T602-Lite on /04/10/2022 17:10:12.
+:: This file.txt was created by T602-Lite on 08/10/2022 20:01:18.
+ahoj
+jak
+se
+daří?

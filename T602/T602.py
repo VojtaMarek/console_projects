@@ -1,12 +1,12 @@
-"""Light version of a historical text file editor T602.
+"""Light version of a _hINESorical text file editor T602.
 
 Current features:
-    1. Create a new text file or celect an existing one to edit.
+    1. Create a new text file or celect an e_xINESing one to edit.
     2. Write a line of text and save the line to the file.
     3. Use special commands: >S - SAVE&EXIT, >E - EXIT, >B - BACKSPACE 
 
 To debug:
-    - backspace command creates an extra blank line, newline=''???
+    - backspace command creates an extra blank line???
     - location of the text files differs from the current folder of T602.py WHY?
     - does not count blank lines!
 
@@ -15,157 +15,138 @@ Future features:
         EditFile, PrintScreen
     - codeReview?
     - revise and upload it to github, maybe?
-    - is there a way to edit a line insted of deleting it? -> input(defaulValueToEdit=(File[-1:]))
+    - is there a way to edit a line insted of deleting it? -> input(defaulValueToEdit=(file_name[-1:]))
     - ...
 
 """
 from ast import Pass
+from copy import copy
 from datetime import datetime
-import os.path
-
+from fileinput import filename #není nutno importovat from .. (klidně celé knihovny)
 import os
+
+#Enter: styletext('text', S.FAIL), by default color = WARNING
+import style as S
+from style import styletext
 
 # System call
-os.system("")
-
-# Class of different styles; print(Style.YELLOW + "Hello, World!")
-class Style():
-    #reset style
-    RESET = '\033[0m'
-    #text styles
-    BLACK = '\033[30m'
-    RED = '\033[31m'
-    GREEN = '\033[32m'
-    YELLOW = '\033[33m'
-    BLUE = '\033[34m'
-    MAGENTA = '\033[35m'
-    CYAN = '\033[36m'
-    WHITE = '\033[37m'
-    UNDERLINE = '\033[4m'
-    #others
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
+os.system("") #?
 
 # clear console function, use "clearScreen()"
-import os
 clearScreen = lambda: os.system("cls" if os.name in ("nt", "dos") else "clear")
 
 #global variables
-File = "file.txt" # File to be edited
-FileList = [] #copy of File for restoration
-Line = "" #Line text variable
-LineNo = 1 #line to be edited
+#file_name = "file.txt" # file_name to be edited
+#file_content = []
+#file_content_backup = [] #copy of file_name content for restoration
+#LINE = "" #LINE text variable
 
 #returns line number
-def lineNo():
+"""def lineNo(line_no):
     try:
-        with open(File, 'r', encoding='utf8', newline='') as f:
-            lineNo = len(f.readlines()) + 1
+        with open(file_name, 'r', encoding='utf8') as f:
+            line_no = len(f.readlines()) + 1
             f.close()
-        return lineNo
+        return line_no
     except:
-        return 0
+        return 0"""
 
 #prints heading
-def print_heading():
+def print_heading(line_no, file = 'None'):        #funkce na vykreslování textu od Pythonu; https://docs.python.org/3/library/string.html#format-specification-mini-language
     clearScreen()
-    text1 = (f" T602-Lite! You are editing the line '{lineNo()}' file '{File}' ")
+    text1 = (f" T602-Lite! You are editing the line '{line_no + 1}' file '{file}' ")
     text2_temp = (" Commands:  >S - SAVE&EXIT, >E - EXIT, >B - BACKSPACE")
     text2 = text2_temp + ((len(text1)-len(text2_temp)) * ' ')
     box_side =  len(text1) * '═'
-    print(Style.OKBLUE + f"╔{box_side}╗\n║{text1}║\n║{text2}║\n╚{box_side}╝" + Style.RESET)
+    print(styletext(f"╔{box_side}╗\n║{text1}║\n║{text2}║\n╚{box_side}╝", S.OKBLUE))
 
 #prints the heading and the file content
-def print_screen():
-    print_heading()
-    with open(File, 'r', encoding='utf8', newline='') as f:
+def print_screen(file_name):
+    with open(file_name, 'r', encoding='utf8') as f:
         print(f.read())
         f.close()
-
-#returns Continue or Break according to special commands
-def special(command):
-    if command.upper() == '>S':
-        print('> Saved.')
-        return "Break"
-    elif command.upper() == '>E':
-        print(Style.WARNING + '> Exit, NOT saved.' + Style.RESET)
-        if FileList == []: os.remove(File)
-        else:
-            with open(File, 'w', encoding='utf-8', newline='') as f:
-                f.writelines(FileList)
-                f.close()
-        return "Break"
-    elif command[:2].upper() == '>B':
-        with open(File, 'r', newline='') as f:
-            counted = (command.upper()).count('B')
-            lines = f.readlines()
-            lines = lines[:-counted]
-            f.close()
-        with open(File, 'w', newline='') as f:
-            text = ''.join(lines)
-            f.write(text)
-            f.close()
-        return "Continue"
-    else:
-        print(Style.FAIL + f"> '{command}' is not recognised command. Press ENTER to continue without any changes." + Style.RESET)
-        input()
-        return "Continue"
     
 #load file or create a new one
-def load_file():
-    global File
-    global FileList
-    print(Style.WARNING + "> Enter a file name 'file.txt' is set by default." + Style.RESET)
-    file = input('> ')
-    if file == '': pass
-    else: File = file
+def load_file(file_name, file_content):
+    print(styletext(f"> Enter a file name, {file_name} is set by default."))
+    imput_name = input('> ')
+    file_name_backup = file_name
+    if imput_name != '': file_name = imput_name
     try:
-        with open(File, 'x', encoding='utf-8', newline='') as f:
+        with open(file_name, 'x', encoding='utf-8') as f:
             now = datetime.now()
-            f.write(f':: This File was created by T602-Lite on {now.strftime("/%d/%m/%Y %H:%M:%S")}.')
-            f.close()
-            FileList = []
+            file_content.append(f':: This {file_name} was created by T602-Lite on {now.strftime("%d/%m/%Y %H:%M:%S")}.')
     except OSError:
-        File = 'file.txt'
-        with open(File, 'r', encoding='utf-8', newline='') as f:
-            FileList = f.readlines()
+        file_name = file_name_backup
+        with open(file_name, 'r', encoding='utf-8') as f:
+            file_content = f.readlines()
             f.close()
     except:
-        with open(File, 'r', encoding='utf-8', newline='') as f:
-            FileList = f.readlines()
+        with open(file_name, 'r', encoding='utf-8') as f:
+            file_content = f.readlines()
             f.close()
+    return file_content
 
 def editor():
-    print_heading()
-    load_file()
-    while(1):
-        print_screen()
-        Line = input()
-        if Line != '':
-            if Line[0] == '>':
-                specialCommand = special(Line)
-                if specialCommand == 'Continue': continue
-                if specialCommand == 'Break': break
-        with open(File, 'a', encoding='utf-8', newline='') as f:
-            f.write('\n')
-            f.write(Line)
-            f.close()
-
-#the main loop
-while(1):
-    editor()
-    print(Style.WARNING + "> Press ENTER to terminate T602-Lite, or 'O' to open another file." + Style.RESET)
-    question = input('> ')
-    if question.upper() != 'O':
-        break
-
     
+    file_name = "file.txt" # change for diffreent default file name
+    file_content = []
+    file_content_backup = [] #copy of file_content for restoration
+    input_line = "" #LINE text variable
+
+    file_content = load_file(file_name, file_content)
+    file_content_backup = file_content.copy()
+    print_heading(len(file_content), file_name)
+    
+    while(1):
+        print_heading(len(file_content), file_name)
+        if file_content != []: print_screen(file_name)
+        input_line = input()
+        if input_line != '' and input_line[0] == '>':
+            
+            #special commands section
+            if input_line.upper() == '>S':
+                print(styletext('> Saved.'))
+                break
+            elif input_line.upper() == '>E':
+                print(styletext('> Exit, NOT saved.'))
+                #restore old version from before editting
+                if file_content_backup == []:
+                    os.remove(file_name)
+                else:
+                    with open(file_name, 'w', encoding='utf-8') as f:
+                        f.writelines(file_content_backup)
+                        f.close()
+                break
+            elif input_line[:2].upper() == '>B':
+                counted_backspace = (input_line.upper()).count('B')
+                del file_content[-counted_backspace:]
+            else:
+                print(styletext(f"> '{input_line}' is not recognised command. Press ENTER to continue without any changes.", S.FAIL))
+                input()
+                continue
+        else: #executed normally
+            file_content.append('\n'+input_line)       
+        if file_content == []:
+            os.remove(file_name)
+            break
+        with open(file_name, 'w', encoding='utf-8') as f:
+            f.writelines(file_content)
+            #f.writelines("\n")
+            f.close()
+        #if file_content == file_content_backup: break #break after saving old version, not on line 118
+
+def main():
+    """the main loop"""
+    while(1):
+        editor()
+        print(styletext("> Press ENTER to terminate T602-Lite, or 'O' to open another file."))
+        question = input('> ')
+        if question.upper() != 'O':
+            break
+
+
+if __name__ == '__main__':
+    main()
 
     

@@ -3,7 +3,7 @@ import os
 clear = lambda: os.system('cls' if os.name in ('nt', 'dos') else 'clear')
 
 #global variables
-List = []
+List = []   #pojmenovat jinak
 
 #starting position of the number
 X = 1
@@ -13,7 +13,7 @@ Z = 0
 #dimensions of the cube
 L = 1
 
-""""adds one line to a list, and changes to start value (True, False)"""
+""""adds one line to a list, and changes to start value (True, False)""" #dát dovnitř do funkce, dot.string - help(line_to_list)
 def line_to_list(start, length):
     position = 0
     new_line = [] #line to be finally added to the global List
@@ -92,7 +92,7 @@ clear()
 print_list()
 
 
-"""The main loop"""
+"""The main loop""" #__main__ funkce
 while True:
     #direction = ""
     print("\nChoose direction (wsad):")
