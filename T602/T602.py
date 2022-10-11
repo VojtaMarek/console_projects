@@ -6,15 +6,13 @@ Current features:
     3. Use special commands: >S - SAVE&EXIT, >E - EXIT, >B - BACKSPACE 
 
 To debug:
-    - backspace command creates an extra blank line???
+    - backspace command sometimes creates an extra blank line???
     - location of the text files differs from the current folder of T602.py WHY?
-    - does not count blank lines!
 
 Future features:
     - create classes
         EditFile, PrintScreen
-    - codeReview?
-    - revise and upload it to github, maybe?
+    - revise and upload the final project to github, maybe?
     - is there a way to edit a line insted of deleting it? -> input(defaulValueToEdit=(file_name[-1:]))
     - ...
 
@@ -35,24 +33,9 @@ os.system("") #?
 # clear console function, use "clearScreen()"
 clearScreen = lambda: os.system("cls" if os.name in ("nt", "dos") else "clear")
 
-#global variables
-#file_name = "file.txt" # file_name to be edited
-#file_content = []
-#file_content_backup = [] #copy of file_name content for restoration
-#LINE = "" #LINE text variable
 
-#returns line number
-"""def lineNo(line_no):
-    try:
-        with open(file_name, 'r', encoding='utf8') as f:
-            line_no = len(f.readlines()) + 1
-            f.close()
-        return line_no
-    except:
-        return 0"""
-
-#prints heading
 def print_heading(line_no, file = 'None'):        #funkce na vykreslování textu od Pythonu; https://docs.python.org/3/library/string.html#format-specification-mini-language
+    """prints heading"""
     clearScreen()
     text1 = (f" T602-Lite! You are editing the line '{line_no + 1}' file '{file}' ")
     text2_temp = (" Commands:  >S - SAVE&EXIT, >E - EXIT, >B - BACKSPACE")
@@ -60,14 +43,14 @@ def print_heading(line_no, file = 'None'):        #funkce na vykreslování text
     box_side =  len(text1) * '═'
     print(styletext(f"╔{box_side}╗\n║{text1}║\n║{text2}║\n╚{box_side}╝", S.OKBLUE))
 
-#prints the heading and the file content
 def print_screen(file_name):
+    """prints the heading and the file content"""
     with open(file_name, 'r', encoding='utf8') as f:
         print(f.read())
         f.close()
     
-#load file or create a new one
 def load_file(file_name, file_content):
+    """load file or create a new one"""
     print(styletext(f"> Enter a file name, {file_name} is set by default."))
     imput_name = input('> ')
     file_name_backup = file_name
@@ -88,7 +71,7 @@ def load_file(file_name, file_content):
     return file_content
 
 def editor():
-    
+    """load file, create backup, loop while editing file, use commands to save, exit or backspace"""
     file_name = "file.txt" # change for diffreent default file name
     file_content = []
     file_content_backup = [] #copy of file_content for restoration
