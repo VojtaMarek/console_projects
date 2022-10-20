@@ -1,9 +1,25 @@
 import os
+import click
+from random import randint
+import time
 
 
 # clear console function
 clear = lambda: os.system("cls" if os.name in ("nt", "dos") else "clear")
 
+def add_food(cube_size, cube):
+    i = 0
+    while i <= 3:
+        x = randint(1, cube_size) - 1
+        y = randint(1, cube_size) - 1
+        z = randint(1, cube_size) - 1  
+        cube[z][y][x]
+        if cube[z][y][x].startswith('E'):
+            cube[z][y][x] = 'F0'
+            break
+        i += 1
+
+    return cube
 
 def printCube(cube):
     """prints cube in 2D visualisation"""
@@ -18,7 +34,7 @@ def printCube(cube):
                     next_color = (int(item[1]) % len(cube)) + 1
                 print(getBox(item), end=" ")
             print(getBox("R" + str(next_color)), end="\n")
-        print("  " + (getBox("D" + str(next_color)) + " ") * len(cube), end="\n" * 2)
+        print("  " + (getBox("D" + str(next_color)) + " ") * len(cube), end="\n" * 1)
 
 
 def createCube(cube_size):
@@ -47,12 +63,12 @@ def getBox(atr): # 'atr' is composed by letter and number, corresponding to stat
 
     # set and reset color:
     color = int(atr[1])
-    reset_color = "\033[0m"  # reset color
+    reset_color = "\033[37m"  # reset color
     if color == 0:
-        pass  # reset color
+        color = "\033[37m"
     else:
         color = (color % 5)# + 1
-    color = "\033[3" + str(color) + "m"
+        color = "\033[3" + str(color) + "m"
     # colores = ['\033[31m', '\033[32m', '\033[33m', '\033[34m', '\033[35m'] #red, green, yellow, blue, purple
 
     # set state/symbol:
@@ -65,6 +81,8 @@ def getBox(atr): # 'atr' is composed by letter and number, corresponding to stat
         text = "\u2612 "  # box with dot <= (T)RACE
     if state == "C":
         text = "\u25a3 "  # full box <= (C)URSOR
+    if state == "F":
+        text = "\u25a6 "  # mouse <= (F)ood
 
     if state == "U":
         text = "\u25b4 "  # indication (U)P to another space
@@ -81,9 +99,11 @@ def getBox(atr): # 'atr' is composed by letter and number, corresponding to stat
 def main():
     """sets a cube size and do the main loop"""
 
-    print("Enter a cube size:")
+    clear()
+    print("Enter your 3D playground size. (default 5)")
     try:
-        cube_size = int(input("> "))
+        cube_size = int(click.getchar())
+        if cube_size == 1: cube_size = 5
     except:
         cube_size = 5  # Default size of cube.
     clear()
@@ -92,21 +112,27 @@ def main():
     # print(cube) # Un-comment for to see the structure of cube list
 
     # get initial coordinates
-    z = 1
-    x = y = (cube_size // 2) + 1
+    x = randint(1, cube_size)
+    y = randint(1, cube_size)
+    z = randint(1, cube_size)
+
+    points = 0
 
     cube[z - 1][y - 1][x - 1] = "C0"
+    print(f'Snake 3D - eat them all!\nGet points by eating the food!\n')
     printCube(cube)
 
     # pre_x, pre_y, pre_z = x, y, z
 
     # the main loop:
     while True:
+               
         # save future previous coordinates
         pre_x, pre_y, pre_z = x, y, z
-
-        print("\nChoose direction (wsad):")
-        direction = input("> ").upper().strip()
+        print("\nChoose direction (wsad)")
+        
+        direction = str(click.getchar()).upper()
+        # direction = input("> ").upper().strip()      
         if direction == "W":
             y -= 1
         elif direction == "S":
@@ -117,7 +143,9 @@ def main():
             x += 1
         else:
             continue
+        
         clear()
+        
 
         # justify coordinates:
         if x > cube_size:
@@ -137,24 +165,33 @@ def main():
         if z == 0:
             z += cube_size
 
-        # check for collison and terminat in case:
-        if cube[z - 1][y - 1][x - 1].startswith("T"):
-            cube[z - 1][y - 1][x - 1] = "T0"
+        # check for collison or food with previous position:
+        pre_position = cube[z - 1][y - 1][x - 1]
+        if pre_position.startswith("T"):
+            pre_position = "T0"
+            print(f'Snake 3D - eat them all!\nPOINTS: {points}\n')
             printCube(cube)
-            print("Collision!")
-            input()
+            print("Collision! Press ENTER to continue.")
             break
+        elif pre_position.startswith('F'):
+            points += 1
 
         # record new move
         cube[pre_z - 1][pre_y - 1][pre_x - 1] = "T" + str(pre_z)
         cube[z - 1][y - 1][x - 1] = "C0"
+        
+        #print the header, cube and in next loop as for input
+        print(f'Snake 3D - eat them all!\nPOINTS: {points}\n')
+        
+        cube = add_food(cube_size, cube)
         printCube(cube)
 
 
 if __name__ == "__main__":
     while True:
         main()
-        print("Press ENTER to terminate or enter 'A' to continue.")
-        terminate_question = input("> ")
+        print("OR press (A)again to reset Snake_3D.")
+        terminate_question = str(click.getchar()).upper()
+        print('')
         if terminate_question.upper() != "A":
             break
