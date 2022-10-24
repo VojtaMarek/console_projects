@@ -10,3 +10,4 @@
 - This console editor can create, edit and save files.
 - It was created to practice working with files.
 - An new font style library is used, made for this project.
+
