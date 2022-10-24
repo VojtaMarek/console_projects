@@ -20,7 +20,7 @@ from style import styletext
 clearScreen = lambda: os.system("cls" if os.name in ("nt", "dos") else "clear")
 
 
-def print_heading(line_no=-1, file_name="None"):
+def printHeading(line_no=-1, file_name="None"):
     """prints heading"""
     clearScreen()
     text1 = f" T602-Lite! You are editing the line '{line_no + 1}' file '{file_name}' "
@@ -30,7 +30,7 @@ def print_heading(line_no=-1, file_name="None"):
     print(styletext(f"╔{box_side}╗\n║{text1}║\n║{text2}║\n╚{box_side}╝", S.OKBLUE))
 
 
-def load_file():
+def loadFile():
     """load or create a new file"""
     file_content = []
     default_file_name = "file.txt"
@@ -58,11 +58,11 @@ def editor():
     file_content = []
     input_line = ""
 
-    print_heading()
-    file_name, file_content = load_file()
+    printHeading()
+    file_name, file_content = loadFile()
 
     while True:
-        print_heading(len(file_content), file_name)
+        printHeading(len(file_content), file_name)
         for l in file_content:
             print(l)
 
