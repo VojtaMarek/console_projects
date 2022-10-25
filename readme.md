@@ -11,3 +11,7 @@
 <ul>It was created to practice working with files.</ul>
 <ul>An new font style library is used, made for this project.</ul>
 
+<h2>probabilityDice - let it roll.</h2>
+<ul>Select number of dices, number of sides of each dice and number or repetitions.</ul>
+<ul>Choose type of game - all the same or all one number</ul>
+<ul>Get probability by experimental rolls, insted of statistical calculations, by so-called  'Monte Carlo method'.</ul>
