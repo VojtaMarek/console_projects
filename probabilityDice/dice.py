@@ -2,6 +2,8 @@
 # :: This gives a proven and widely recognized alternative for statistical calculations and may
 # :: save you some brain cells :)
 
+# to check the results, for eg. https://www.omnicalculator.com/statistics/dice
+
 import random
 # Enter: styletext('text', S.FAIL), by default color = WARNING
 import style as S
