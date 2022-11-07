@@ -11,7 +11,7 @@ from style import styletext
 
 def read_int(string_atr, default="1"):
     try:
-        print(f"{string_atr:<30s}({default} is set by default)")
+        print(f"{string_atr:<30s}({default} by default)")
         atr = int(input(f"{'':<31s}").strip())
     except:
         atr = default
@@ -20,7 +20,7 @@ def read_int(string_atr, default="1"):
 
 
 def simulation_setup():
-    print("\nRoll dice simulation to avoid statistical calculations by so-called 'Monte Carlo method'.\nFirst, choose one of the game types to through dice:\n")
+    print("\nRoll dice simulation to avoid statistical calculations by so-called 'Monte Carlo method'.\nFirst, choose one of the game types to throw dice:\n")
 
 
     print("\t1 -> All dice with the same side value")
@@ -35,8 +35,7 @@ def simulation_setup():
 
     return game_type, dice_num, sides_num, times_num
 
-def decimal_places_visible(number): # not in use
-    count = 0
+def decimal_places_visible(number, count=0):
     multiplier = 1.0        # tady jsem měl int (floatem se to vyřešilo) a házelo mi to u 10mil pokusů 'OverflowError: int too large to convert to float', proč?
     while True:
         if number * multiplier > 1:
@@ -76,9 +75,9 @@ def main():
     print("Finished")
     
     result_percent = float(success_cnt) / times_num * 100
-    decimals = decimal_places_visible(result_percent) + 1
+    decimals = decimal_places_visible(result_percent, 1)
 
-    print(styletext(f"There are {success_cnt} ocurence(s) from {times_num}. "), end="")
+    print(styletext(f"There are {success_cnt:,} ocurence(s) from {times_num:,}. "), end="")
     print(f"That corresponds to {result_percent:.{decimals}f} %.\n")
 
 def main_(): # not in use
