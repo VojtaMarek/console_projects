@@ -11,11 +11,10 @@ from style import styletext
 
 def read_int(string_atr, default="1"):
     try:
-        print("{:<30s}".format(string_atr) + f"({default} is set by default)")
-        atr = int(input("{:<31s}".format('')).strip())
+        print(f"{string_atr:<30s}({default} is set by default)")
+        atr = int(input(f"{'':<31s}").strip())
     except:
         atr = default
-        #print("{:<20s}".format("") + f"(default: {atr})")
 
     return int(atr)
 
@@ -77,7 +76,7 @@ def main():
     print("Finished")
     
     result_percent = float(success_cnt) / times_num * 100
-    decimals = decimal_places_visible(result_percent)
+    decimals = decimal_places_visible(result_percent) + 1
 
     print(styletext(f"There are {success_cnt} ocurence(s) from {times_num}. "), end="")
     print(f"That corresponds to {result_percent:.{decimals}f} %.\n")
