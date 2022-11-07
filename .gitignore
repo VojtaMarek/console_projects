@@ -9,3 +9,6 @@ snake3D/__pycache__
 
 .gitignore
 .vscode/settings.json
+
+probability_dice/dice_mentor.py
+probability_dice/__pycache__/
