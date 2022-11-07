@@ -1,4 +1,4 @@
-# :: Through dice a number of times and try the so-called 'Monte Carlo Method' or 'Monte Carlo sampling'.
+# :: Throw dice a number of times and try the so-called 'Monte Carlo Method' or 'Monte Carlo sampling'.
 # :: This gives a proven and widely recognized alternative for statistical calculations and may
 # :: save you some brain cells :)
 
@@ -9,7 +9,7 @@ import random
 import style as S
 from style import styletext
 
-def inputUser(string_atr, default="1"):
+def read_int(string_atr, default="1"):
     try:
         print("{:<30s}".format(string_atr) + f"({default} is set by default)")
         atr = int(input("{:<31s}".format('')).strip())
@@ -20,7 +20,7 @@ def inputUser(string_atr, default="1"):
     return int(atr)
 
 
-def printHeader():
+def simulation_setup():
     print("\nRoll dice simulation to avoid statistical calculations by so-called 'Monte Carlo method'.\nFirst, choose one of the game types to through dice:\n")
 
 
@@ -29,14 +29,14 @@ def printHeader():
     # Space to add more game options here eventually
     print('')
 
-    game_type = inputUser("Game type:",)
-    dice_num = inputUser("Number of dice:", "2")
-    sides_num = inputUser("A dice sides:", "6")
-    times_num = inputUser("Test repetitions:", "1000000")
+    game_type = read_int("Game type:",)
+    dice_num = read_int("Number of dice:", "2")
+    sides_num = read_int("A dice sides:", "6")
+    times_num = read_int("Test repetitions:", "1_000_000")
 
     return game_type, dice_num, sides_num, times_num
 
-def decimalsShown(number):
+def decimal_places_visible(number): # not in use
     count = 0
     multiplier = 1.0        # tady jsem měl int (floatem se to vyřešilo) a házelo mi to u 10mil pokusů 'OverflowError: int too large to convert to float', proč?
     while True:
@@ -44,9 +44,46 @@ def decimalsShown(number):
             return count
         multiplier *= 10
         count += 1
+ 
+def roll(dice_num, sides_num, times_num):
+    for _ in range(times_num):
+        dice_rolls = []
+        for _ in range(dice_num):
+            dice_roll = random.randint(1, sides_num)
+            dice_rolls.append(dice_roll)
+        yield dice_rolls
 
 def main():
-    game_type, dice_num, sides_num, times_num = printHeader()
+    game_type, dice_num, sides_num, times_num = simulation_setup()
+ 
+    print(f"\nGame type {game_type}: ", end="")
+ 
+    success_cnt = 0
+    for r in roll(dice_num, sides_num, times_num):
+        
+        # print(f"{r}", end="")
+ 
+        if game_type == 1 and all([v == r[0] for v in r]):
+            success_cnt += 1
+            # print(" - YES", end="")
+        elif game_type == 2 and all([v == 6 for v in r]):
+            success_cnt += 1
+            # print(" - YES", end="")
+        else:
+            # print(" - NO", end="")
+            pass
+        # print()
+ 
+    print("Finished")
+    
+    result_percent = float(success_cnt) / times_num * 100
+    decimals = decimal_places_visible(result_percent)
+
+    print(styletext(f"There are {success_cnt} ocurence(s) from {times_num}. "), end="")
+    print(f"That corresponds to {result_percent:.{decimals}f} %.\n")
+
+def main_(): # not in use
+    game_type, dice_num, sides_num, times_num = simulation_setup()
 
     times_num_backup = times_num
     # get it roll
@@ -94,7 +131,7 @@ def main():
     
     
     resultNum = float(count / times_num_backup)
-    decimals = decimalsShown(resultNum)
+    decimals = decimal_places_visible(resultNum)
     
     print(styletext("{:<20s}".format(f"There are {count} ocurence(s) from {times_num_backup}. ")), end='')
     print("That corresponds to {:.{dec}%}".format(resultNum, dec = decimals), end='\n\n')
